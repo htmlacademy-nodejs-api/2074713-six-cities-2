@@ -1,6 +1,6 @@
 import { Command } from './command.interface.js';
 import { GenerateCommandDeps } from './generate-command-deps.type.js';
-import { CommandName } from './command-name.enum.js'
+import { CommandName } from './command-name.enum.js';
 
 export class GenerateCommand<SourceData = unknown, DestinationData = unknown> implements Command {
   public readonly name: CommandName = CommandName.Generate;
@@ -43,7 +43,7 @@ export class GenerateCommand<SourceData = unknown, DestinationData = unknown> im
   }
 
   private handleGenerationError(error: unknown): void {
-    this.deps.logger.error(`Не удалось сгенерировать данные`);
+    this.deps.logger.error('Не удалось сгенерировать данные');
 
     if (error instanceof Error) {
       this.deps.logger.error(error.stack);

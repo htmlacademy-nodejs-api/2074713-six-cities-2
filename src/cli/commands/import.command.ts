@@ -38,14 +38,14 @@ export class ImportCommand<SourceData = unknown, DestinationData = unknown> impl
     const parsedData = this.deps.sourceDataParser.parse(eventDescriptor.contentChunk);
     // TODO: логирование заменить на настоящий импорт
     this.deps.logger.log(parsedData);
-  }
+  };
 
   private contentReadEventListener = (eventDescriptor: ContentReadEventDescriptor) => {
     this.deps.logger.info(`Импортировано записей: ${eventDescriptor.contentChunksCount}`);
-  }
+  };
 
   private handleImportError(error: unknown): void {
-    this.deps.logger.error(`Не удалось импортировать данные`);
+    this.deps.logger.error('Не удалось импортировать данные');
 
     if (error instanceof Error) {
       this.deps.logger.error(error.stack);
