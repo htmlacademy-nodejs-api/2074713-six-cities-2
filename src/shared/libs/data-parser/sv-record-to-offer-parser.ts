@@ -6,19 +6,19 @@ import {
   AccommodationCategory,
   Amenity,
   LngLat,
-  SVRecord
+  SVRecord,
+  SVValuePartsSeparator
 } from '../../types/index.js';
 import { DataParser } from './data-parser.interface.js';
 
-const SOURCE_VALUE_SEPARATOR = ',';
 const TRUE_STRING = String(true);
 
-export class SVToOffersParser implements DataParser<SVRecord[], Offer[]> {
-  public parse(sourceData: SVRecord[]): Offer[] {
-    return sourceData.map((sourceRecord) => this.parseRecord(sourceRecord));
-  }
+export class SVRecordToOfferParser implements DataParser<SVRecord, Offer> {
+  constructor(
+    private readonly valuePartsSeparator: SVValuePartsSeparator = SVValuePartsSeparator.Semicolon
+  ) {}
 
-  private parseRecord(sourceRecord: SVRecord): Offer {
+  public parse(record: SVRecord): Offer {
     const [
       title,
       description,
@@ -42,7 +42,7 @@ export class SVToOffersParser implements DataParser<SVRecord[], Offer[]> {
 
       isPremium,
       isFavorite
-    ] = sourceRecord;
+    ] = record;
 
     return {
       title,
@@ -59,7 +59,7 @@ export class SVToOffersParser implements DataParser<SVRecord[], Offer[]> {
       accommodationCategory: accommodationCategory as AccommodationCategory,
       amenities: this.parseAmenities(amenities),
 
-      rentalPrice: this.parseFloat(rentalPrice),
+      rentalPrice: this.parseInt(rentalPrice),
       roomsQuantity: this.parseInt(roomsQuantity),
       guestsQuantity: this.parseInt(guestsQuantity),
       commentsCount: this.parseInt(commentsCount),
@@ -70,18 +70,18 @@ export class SVToOffersParser implements DataParser<SVRecord[], Offer[]> {
     };
   }
 
-  private parsePhotos(sourceValue: string): string[] {
-    return sourceValue.split(SOURCE_VALUE_SEPARATOR);
+  private parsePhotos(value: string): string[] {
+    return value.split(this.valuePartsSeparator);
   }
 
-  private parseUser(sourceValue: string): User {
+  private parseUser(value: string): User {
     const [
       type,
       name,
       email,
       password,
       avatar
-    ] = sourceValue.split(SOURCE_VALUE_SEPARATOR);
+    ] = value.split(this.valuePartsSeparator);
 
     return {
       type: type as UserType,
@@ -92,37 +92,37 @@ export class SVToOffersParser implements DataParser<SVRecord[], Offer[]> {
     };
   }
 
-  private parseDate(sourceValue: string): Date {
-    return new Date(sourceValue);
+  private parseDate(value: string): Date {
+    return new Date(value);
   }
 
-  private parseCity(sourceValue: string): City {
-    const [name, lng, lat] = sourceValue.split(SOURCE_VALUE_SEPARATOR);
+  private parseCity(value: string): City {
+    const [name, lng, lat] = value.split(this.valuePartsSeparator);
 
     return {
       name,
-      lngLat: this.parseLngLat(`${lng}${SOURCE_VALUE_SEPARATOR}${lat}`)
+      lngLat: this.parseLngLat(`${lng}${this.valuePartsSeparator}${lat}`)
     };
   }
 
-  private parseLngLat(sourceValue: string): LngLat {
-    const [lng, lat] = sourceValue.split(SOURCE_VALUE_SEPARATOR).map(this.parseFloat);
+  private parseLngLat(value: string): LngLat {
+    const [lng, lat] = value.split(this.valuePartsSeparator).map(this.parseFloat);
     return { lng, lat };
   }
 
-  private parseAmenities(sourceValue: string): Amenity[] {
-    return sourceValue.split(SOURCE_VALUE_SEPARATOR) as Amenity[];
+  private parseAmenities(value: string): Amenity[] {
+    return value.split(this.valuePartsSeparator) as Amenity[];
   }
 
-  private parseInt(sourceValue: string): number {
-    return parseInt(sourceValue, 10);
+  private parseInt(value: string): number {
+    return parseInt(value, 10);
   }
 
-  private parseFloat(sourceValue: string): number {
-    return parseFloat(sourceValue);
+  private parseFloat(value: string): number {
+    return parseFloat(value);
   }
 
-  private parseBoolean(sourceValue: string): boolean {
-    return sourceValue === TRUE_STRING;
+  private parseBoolean(value: string): boolean {
+    return value === TRUE_STRING;
   }
 }

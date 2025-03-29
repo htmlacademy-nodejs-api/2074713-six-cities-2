@@ -1,0 +1,1 @@
+export const SV_BUFFER_CAPACITY_IN_BYTES = 16 * 1024;

@@ -2,10 +2,14 @@
 
 import { Application } from './cli/application/index.js';
 import { SingleCommandParser } from './cli/commands-parser/index.js';
-import { Command, HelpCommand, VersionCommand, ImportCommand } from './cli/commands/index.js';
+import { Command, HelpCommand, VersionCommand, GenerateCommand, ImportCommand } from './cli/commands/index.js';
+import { SVValuesSeparator, SVValuePartsSeparator } from './shared/types/index.js';
 import { ColoredLogger } from './shared/libs/logger/index.js';
-import { SVFileReader, ValuesSeparator } from './shared/libs/file-reader/index.js';
-import { SVToOffersParser } from './shared/libs/data-parser/index.js';
+import { OffersSourceDataLoader } from './shared/libs/data-loader/index.js';
+import { OfferSVRecordGenerator } from './shared/libs/data-generator/index.js';
+import { SVStreamFileWriter } from './shared/libs/stream-file-writer/index.js';
+import { SVStreamFileReader } from './shared/libs/stream-file-reader/index.js';
+import { SVRecordToOfferParser } from './shared/libs/data-parser/index.js';
 
 const logger = new ColoredLogger();
 
@@ -38,13 +42,19 @@ function createApplication(): Application {
 function createCommands(): Command[] {
   const helpCommand = new HelpCommand({ logger });
   const versionCommand = new VersionCommand({ logger });
+  const generateCommand = new GenerateCommand({
+    logger,
+    sourceDataLoader: new OffersSourceDataLoader(),
+    destinationDataGenerator: new OfferSVRecordGenerator(SVValuePartsSeparator.Comma),
+    destinationFileWriter: new SVStreamFileWriter(SVValuesSeparator.Tab)
+  });
   const importCommand = new ImportCommand({
     logger,
-    fileReader: new SVFileReader(ValuesSeparator.Tab),
-    dataParser: new SVToOffersParser()
+    sourceFileReader: new SVStreamFileReader(SVValuesSeparator.Tab),
+    sourceDataParser: new SVRecordToOfferParser(SVValuePartsSeparator.Comma)
   });
 
-  return [helpCommand, versionCommand, importCommand];
+  return [helpCommand, versionCommand, generateCommand, importCommand];
 }
 
 function registerCommands(
@@ -58,7 +68,7 @@ function handleCommandsRegistrationError(error: unknown): void {
   logger.error('Не удалось зарегистрировать команды приложения');
 
   if (error instanceof Error) {
-    logger.error(error.message);
+    logger.error(error.stack);
   }
 }
 
@@ -70,6 +80,6 @@ function handleCommandsProcessingError(error: unknown): void {
   logger.error('Не удалось обработать команды приложения');
 
   if (error instanceof Error) {
-    logger.error(error.message);
+    logger.error(error.stack);
   }
 }

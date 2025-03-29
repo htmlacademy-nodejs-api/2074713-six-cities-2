@@ -1,40 +1,54 @@
+import {
+  ContentChunkReadEventDescriptor,
+  ContentReadEventDescriptor
+} from '../../shared/libs/stream-file-reader/index.js';
 import { Command } from './command.interface.js';
 import { ImportCommandDeps } from './import-command-deps.type.js';
 import { CommandName } from './command-name.enum.js';
 
-export class ImportCommand implements Command {
+export class ImportCommand<SourceData = unknown, DestinationData = unknown> implements Command {
   public readonly name: CommandName = CommandName.Import;
 
   constructor(
-    private readonly deps: ImportCommandDeps
+    private readonly deps: ImportCommandDeps<SourceData, DestinationData>
   ) {}
 
-  public execute(...args: string[]): void | never {
-    const [filePath] = args;
+  public async execute(...args: string[]): Promise<void> | never {
+    const [sourcePath] = args;
 
-    if (!filePath) {
-      throw new Error('Для импорта данных необходимо указать источник');
+    if (!sourcePath) {
+      throw new Error('Для импорта данных необходимо указать sourcePath');
     }
 
     try {
-      this.importDataFromFile(filePath);
+      await this.importDataFromSource(sourcePath);
     } catch (error) {
-      this.handleImportError(filePath, error);
+      this.handleImportError(error);
     }
   }
 
-  private importDataFromFile(filePath: string): void | never {
-    const sourceData = this.deps.fileReader.read(filePath);
-    const parsedData = this.deps.dataParser.parse(sourceData);
-    // TODO: логирование заменить на настоящий импорт
-    this.deps.logger.log(parsedData);
+  private async importDataFromSource(sourcePath: string): Promise<void> | never {
+    this.deps.sourceFileReader.on('contentChunkRead', this.contentChunkReadEventListener);
+    this.deps.sourceFileReader.on('contentRead', this.contentReadEventListener);
+    this.deps.sourceFileReader.open(sourcePath);
+    await this.deps.sourceFileReader.read();
   }
 
-  private handleImportError(filePath: string, error: unknown): void {
-    this.deps.logger.error(`Не удалось импортировать данные из файла ${filePath}`);
+  private contentChunkReadEventListener = (eventDescriptor: ContentChunkReadEventDescriptor<SourceData>) => {
+    const parsedData = this.deps.sourceDataParser.parse(eventDescriptor.contentChunk);
+    // TODO: логирование заменить на настоящий импорт
+    this.deps.logger.log(parsedData);
+  };
+
+  private contentReadEventListener = (eventDescriptor: ContentReadEventDescriptor) => {
+    this.deps.logger.info(`Импортировано записей: ${eventDescriptor.contentChunksCount}`);
+  };
+
+  private handleImportError(error: unknown): void {
+    this.deps.logger.error('Не удалось импортировать данные');
 
     if (error instanceof Error) {
-      this.deps.logger.error(error.message);
+      this.deps.logger.error(error.stack);
     }
   }
 }
