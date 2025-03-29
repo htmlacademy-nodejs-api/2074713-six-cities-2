@@ -8,10 +8,10 @@ const MANUAL = `
   Пример: cli.js --<command> [--arguments]
 
   Команды:
-    --help:                      # вывод этого текста
-    --version:                   # вывод версии
-    --import <path>:             # импорт данных из источника
-    --generate <n> <path> <url>  # генерация произвольного количества тестовых данных
+    --help:                                                # вывод этого текста
+    --version:                                             # вывод версии
+    --generate <quantity> <destinationPath> <sourceURL>    # генерация данных в файл
+    --import <sourcePath>:                                 # импорт данных из файла
 `;
 
 export class HelpCommand implements Command {

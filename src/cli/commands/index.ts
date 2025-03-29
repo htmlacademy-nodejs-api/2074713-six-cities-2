@@ -7,5 +7,8 @@ export { HelpCommandDeps } from './help-command-deps.type.js';
 export { VersionCommand } from './version.command.js';
 export { VersionCommandDeps } from './version-command-deps.type.js';
 
+export { GenerateCommand } from './generate.command.js';
+export { GenerateCommandDeps } from './generate-command-deps.type.js';
+
 export { ImportCommand } from './import.command.js';
 export { ImportCommandDeps } from './import-command-deps.type.js';

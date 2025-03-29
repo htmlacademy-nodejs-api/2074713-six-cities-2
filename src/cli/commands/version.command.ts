@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 
-import { JSONFileReader } from '../../shared/libs/file-reader/index.js';
+import { JSONSyncFileReader } from '../../shared/libs/sync-file-reader/index.js';
 import { JSONData, PackageConfig } from '../../shared/types/index.js';
 import { Command } from './command.interface.js';
 import { VersionCommandDeps } from './version-command-deps.type.js';
@@ -10,7 +10,7 @@ const CONFIG_FILE_PATH = resolve('./package.json');
 
 export class VersionCommand implements Command {
   public readonly name: CommandName = CommandName.Version;
-  private readonly configFileReader: JSONFileReader = new JSONFileReader();
+  private readonly configFileReader: JSONSyncFileReader = new JSONSyncFileReader();
 
   constructor(
     private readonly deps: VersionCommandDeps
@@ -47,7 +47,7 @@ export class VersionCommand implements Command {
     this.deps.logger.error(`Не удалось прочитать версию в конфигурационном файле ${CONFIG_FILE_PATH}`);
 
     if (error instanceof Error) {
-      this.deps.logger.error(error.message);
+      this.deps.logger.error(error.stack);
     }
   }
 }

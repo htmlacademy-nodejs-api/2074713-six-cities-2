@@ -1,0 +1,88 @@
+{
+  "users": {
+    "names": [
+      "Пользователь 1",
+      "Пользователь 2",
+      "Пользователь 3",
+      "Пользователь 4",
+      "Пользователь 5",
+      "Пользователь 6"
+    ],
+    "emails": [
+      "e@mail1.mock",
+      "e@mail2.mock",
+      "e@mail3.mock",
+      "e@mail4.mock",
+      "e@mail5.mock",
+      "e@mail6.mock"
+    ],
+    "passwords": [
+      "password1",
+      "password2",
+      "password3",
+      "password4",
+      "password5",
+      "password6"
+    ],
+    "avatars": [
+      "avatar1.jpg",
+      "avatar2.jpg",
+      "avatar3.jpg",
+      "avatar4.jpg",
+      "avatar5.jpg",
+      "avatar6.jpg"
+    ]
+  },
+  "offers": {
+    "titles": [
+      "Название 1",
+      "Название 2",
+      "Название 3",
+      "Название 4",
+      "Название 5",
+      "Название 6"
+    ],
+    "descriptions": [
+      "Описание 1",
+      "Описание 2",
+      "Описание 3",
+      "Описание 4",
+      "Описание 5",
+      "Описание 6"
+    ],
+    "photos": [
+      "photo1.jpg",
+      "photo2.jpg",
+      "photo3.jpg",
+      "photo4.jpg",
+      "photo5.jpg",
+      "photo6.jpg"
+    ],
+    "cities": [
+      {
+        "name": "Amsterdam",
+        "lngLat": { "lng": 4.895168, "lat": 52.370216 }
+      },
+      {
+        "name": "Brussels",
+        "lngLat": { "lng": 4.351697, "lat": 50.846557 }
+      },
+      {
+        "name": "Cologne",
+        "lngLat": { "lng": 6.959974, "lat": 50.938361 }
+      },
+      {
+        "name": "Dusseldorf",
+        "lngLat": { "lng": 6.776314, "lat": 51.225402 }
+      },
+      {
+        "name": "Hamburg",
+        "lngLat": { "lng": 10.000654, "lat": 53.550341 }
+      },
+      {
+        "name": "Paris",
+        "lngLat": { "lng": 2.351499, "lat": 48.85661 }
+      }
+    ]
+  }
+}
