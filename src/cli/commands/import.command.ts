@@ -37,7 +37,7 @@ export class ImportCommand<SourceData = unknown, DestinationData = unknown> impl
   private contentChunkReadEventListener = (eventDescriptor: ContentChunkReadEventDescriptor<SourceData>) => {
     const parsedData = this.deps.sourceDataParser.parse(eventDescriptor.contentChunk);
     // TODO: логирование заменить на настоящий импорт
-    this.deps.logger.log(parsedData);
+    this.deps.logger.info(parsedData);
   };
 
   private contentReadEventListener = (eventDescriptor: ContentReadEventDescriptor) => {
