@@ -1,3 +1,5 @@
+export { Component } from './component.enum.js';
+
 export { Offer } from './offer.type.js';
 export { User } from './user.type.js';
 export { UserType } from './user-type.enum.js';

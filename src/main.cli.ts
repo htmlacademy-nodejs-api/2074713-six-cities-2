@@ -4,14 +4,14 @@ import { Application } from './cli/application/index.js';
 import { SingleCommandParser } from './cli/commands-parser/index.js';
 import { Command, HelpCommand, VersionCommand, GenerateCommand, ImportCommand } from './cli/commands/index.js';
 import { SVValuesSeparator, SVValuePartsSeparator } from './shared/types/index.js';
-import { ColoredLogger } from './shared/libs/logger/index.js';
+import { ChalkLogger } from './shared/libs/logger/index.js';
 import { OffersSourceDataLoader } from './shared/libs/data-loader/index.js';
 import { OfferSVRecordGenerator } from './shared/libs/data-generator/index.js';
 import { SVStreamFileWriter } from './shared/libs/stream-file-writer/index.js';
 import { SVStreamFileReader } from './shared/libs/stream-file-reader/index.js';
 import { SVRecordToOfferParser } from './shared/libs/data-parser/index.js';
 
-const logger = new ColoredLogger();
+const logger = new ChalkLogger();
 
 bootstrap();
 

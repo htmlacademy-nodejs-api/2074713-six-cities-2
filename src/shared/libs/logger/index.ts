@@ -1,2 +1,3 @@
 export { Logger } from './logger.interface.js';
-export { ColoredLogger } from './colored-logger.js';
+export { ChalkLogger } from './chalk.logger.js';
+export { PinoLogger } from './pino.logger.js';

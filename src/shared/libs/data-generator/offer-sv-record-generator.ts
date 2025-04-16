@@ -14,29 +14,25 @@ import { DataGenerator } from './data-generator.interface.js';
 const PHOTOS_QUANTITY = 6;
 
 const USER_TYPES = Object.values(UserType);
-const MIN_OFFER_AGE_IN_DAYS = 1;
-const MAX_OFFER_AGE_IN_DAYS = 10;
+const OfferAgeInDays = { Min: 1, Max: 10 };
 
-const MIN_LNG = -180;
-const MAX_LNG = 180;
-const MIN_LAT = -90;
-const MAX_LAT = 90;
+const CoordinatesConstraint = {
+  MinLng: -180,
+  MaxLng: 180,
+  MinLat: -90,
+  MaxLat: 90
+};
 const LNG_LAT_FRACTION_PRECISION = 6;
 
 const ACCOMMODATION_CATEGORIES = Object.values(AccommodationCategory);
 const AMENITIES = Object.values(Amenity);
 const AMENITIES_MIN_QUANTITY = 1;
 
-const MIN_RENTAL_PRICE = 100;
-const MAX_RENTAL_PRICE = 100000;
-const MIN_ROOMS_QUANTITY = 1;
-const MAX_ROOMS_QUANTITY = 8;
-const MIN_GUESTS_QUANTITY = 1;
-const MAX_GUESTS_QUANTITY = 10;
-const MIN_COMMENTS_COUNT = 0;
-const MAX_COMMENTS_COUNT = 100;
-const MIN_RATING = 1;
-const MAX_RATING = 5;
+const RentalPrice = { Min: 100, Max: 100000 };
+const RoomsQuantity = { Min: 1, Max: 8 };
+const GuestsQuantity = { Min: 1, Max: 10 };
+const CommentsCount = { Min: 0, Max: 100 };
+const Rating = { Min: 1, Max: 5 };
 const RATING_FRACTION_PRECISION = 1;
 
 export class OfferSVRecordGenerator implements DataGenerator<OffersSourceData, SVRecord> {
@@ -117,7 +113,7 @@ export class OfferSVRecordGenerator implements DataGenerator<OffersSourceData, S
   private generateDate(): string {
     return dayjs()
       .startOf('day')
-      .subtract(Random.getNumberFromRange(MIN_OFFER_AGE_IN_DAYS, MAX_OFFER_AGE_IN_DAYS), 'days')
+      .subtract(Random.getNumberFromRange(OfferAgeInDays.Min, OfferAgeInDays.Max), 'days')
       .toISOString();
   }
 
@@ -128,8 +124,16 @@ export class OfferSVRecordGenerator implements DataGenerator<OffersSourceData, S
 
   private generateLngLat(): string {
     return [
-      Random.getNumberFromRange(MIN_LNG, MAX_LNG, LNG_LAT_FRACTION_PRECISION),
-      Random.getNumberFromRange(MIN_LAT, MAX_LAT, LNG_LAT_FRACTION_PRECISION)
+      Random.getNumberFromRange(
+        CoordinatesConstraint.MinLng,
+        CoordinatesConstraint.MaxLng,
+        LNG_LAT_FRACTION_PRECISION
+      ),
+      Random.getNumberFromRange(
+        CoordinatesConstraint.MinLat,
+        CoordinatesConstraint.MaxLat,
+        LNG_LAT_FRACTION_PRECISION
+      )
     ].join(this.valuePartsSeparator);
   }
 
@@ -145,23 +149,23 @@ export class OfferSVRecordGenerator implements DataGenerator<OffersSourceData, S
   }
 
   private generateRentalPrice(): string {
-    return `${Random.getNumberFromRange(MIN_RENTAL_PRICE, MAX_RENTAL_PRICE)}`;
+    return `${Random.getNumberFromRange(RentalPrice.Min, RentalPrice.Max)}`;
   }
 
   private generateRoomsQuantity(): string {
-    return `${Random.getNumberFromRange(MIN_ROOMS_QUANTITY, MAX_ROOMS_QUANTITY)}`;
+    return `${Random.getNumberFromRange(RoomsQuantity.Min, RoomsQuantity.Max)}`;
   }
 
   private generateGuestsQuantity(): string {
-    return `${Random.getNumberFromRange(MIN_GUESTS_QUANTITY, MAX_GUESTS_QUANTITY)}`;
+    return `${Random.getNumberFromRange(GuestsQuantity.Min, GuestsQuantity.Max)}`;
   }
 
   private generateCommentsCount(): string {
-    return `${Random.getNumberFromRange(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)}`;
+    return `${Random.getNumberFromRange(CommentsCount.Min, CommentsCount.Max)}`;
   }
 
   private generateRating(): string {
-    return `${Random.getNumberFromRange(MIN_RATING, MAX_RATING, RATING_FRACTION_PRECISION)}`;
+    return `${Random.getNumberFromRange(Rating.Min, Rating.Max, RATING_FRACTION_PRECISION)}`;
   }
 
   private generateIsPremium(): string {
